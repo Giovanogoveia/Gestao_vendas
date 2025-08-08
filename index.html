@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistema de Gestão</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+    header { background: #2c3e50; color: white; padding: 15px; text-align: center; }
+    nav { background: #34495e; display: flex; justify-content: center; }
+    nav button {
+      background: none; border: none; color: white; padding: 15px; cursor: pointer;
+    }
+    nav button:hover { background: #2c3e50; }
+    section { display: none; padding: 20px; }
+    section.active { display: block; }
+    input, select, button { padding: 5px; margin: 5px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #ecf0f1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Sistema de Gestão</h1>
+</header>
+
+<nav>
+  <button onclick="showSection('usuarios')">Usuários</button>
+  <button onclick="showSection('produtos')">Produtos</button>
+  <button onclick="showSection('clientes')">Clientes</button>
+  <button onclick="showSection('vendas')">Vendas</button>
+</nav>
+
+<!-- Usuários -->
+<section id="usuarios" class="active">
+  <h2>Gestão de Usuários</h2>
+  <form id="formUsuario">
+    <input type="text" placeholder="Nome" required />
+    <input type="email" placeholder="Email" required />
+    <input type="password" placeholder="Senha" required />
+    <select required>
+      <option value="">Tipo</option>
+      <option value="admin">Administrador</option>
+      <option value="vendedor">Vendedor</option>
+    </select>
+    <button type="submit">Salvar</button>
+  </form>
+  <table>
+    <thead><tr><th>Nome</th><th>Email</th><th>Tipo</th></tr></thead>
+    <tbody id="listaUsuarios"></tbody>
+  </table>
+</section>
+
+<!-- Produtos -->
+<section id="produtos">
+  <h2>Gestão de Produtos</h2>
+  <form id="formProduto">
+    <input type="text" placeholder="Nome" required />
+    <input type="text" placeholder="Descrição" required />
+    <input type="number" placeholder="Estoque" required />
+    <input type="number" step="0.01" placeholder="Preço" required />
+    <button type="submit">Salvar</button>
+  </form>
+  <table>
+    <thead><tr><th>Nome</th><th>Descrição</th><th>Estoque</th><th>Preço</th></tr></thead>
+    <tbody id="listaProdutos"></tbody>
+  </table>
+</section>
+
+<!-- Clientes -->
+<section id="clientes">
+  <h2>Gestão de Clientes</h2>
+  <form id="formCliente">
+    <input type="text" placeholder="Nome" required />
+    <input type="text" placeholder="CPF/CNPJ" required />
+    <input type="email" placeholder="Email" />
+    <input type="text" placeholder="Telefone" />
+    <input type="text" placeholder="Endereço" />
+    <button type="submit">Salvar</button>
+  </form>
+  <table>
+    <thead><tr><th>Nome</th><th>CPF/CNPJ</th><th>Email</th><th>Telefone</th></tr></thead>
+    <tbody id="listaClientes"></tbody>
+  </table>
+</section>
+
+<!-- Vendas -->
+<section id="vendas">
+  <h2>Registrar Venda</h2>
+  <form id="formVenda">
+    <select required>
+      <option value="">Selecione o cliente</option>
+      <!-- clientes serão inseridos aqui -->
+    </select>
+    <input type="date" required />
+    <input type="number" step="0.01" placeholder="Valor Total" required />
+    <button type="submit">Registrar</button>
+  </form>
+
+  <h3>Itens da Venda</h3>
+  <form id="formItemVenda">
+    <select required>
+      <option value="">Produto</option>
+      <!-- produtos serão inseridos aqui -->
+    </select>
+    <input type="number" placeholder="Quantidade" required />
+    <input type="number" step="0.01" placeholder="Preço Unitário" required />
+    <button type="submit">Adicionar Item</button>
+  </form>
+
+  <table>
+    <thead><tr><th>Produto</th><th>Quantidade</th><th>Preço Unitário</th></tr></thead>
+    <tbody id="listaItensVenda"></tbody>
+  </table>
+</section>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+</script>
+
+</body>
+</html>
