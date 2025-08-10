@@ -3,8 +3,9 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 // ========= Helpers =========
 const $ = (q,root=document)=>root.querySelector(q);
 const $$ = (q,root=document)=>Array.from(root.querySelectorAll(q));
-function showToast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+function showToast(msg){ const t=$('#toast'); if(!t) return; t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 function normalizeNumber(v){ if(v===''||v==null) return null; const n=Number(v.toString().replace(',','.')); return isFinite(n)?n:v; }
+const fmt = v => (typeof v==='number' && isFinite(v)) ? new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(v) : '--';
 
 // ========= Supabase =========
 const SUPABASE_URL = 'https://dylziaqkyavkfwjepqkp.supabase.co';
@@ -15,7 +16,7 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const dbConfig = {
   soja: { table: 'soja', orderBy: 'created_at',
     map: { estoque:'estoque', meta:'meta', recebimento:'recebimento', percentual:'percentual' } },
-  // milho: colunas reais em minúsculas conforme o schema informado
+  // milho: colunas reais em minúsculas conforme schema
   milho: { table: 'milho', orderBy: 'timestamp',
     map: { estoque:'estoqueatual', meta:'meta', recebimento:'recebimento', percentual:'pencentual_metal' } },
   trigo: { table: 'trigo', orderBy: 'created_at',
@@ -270,24 +271,32 @@ function primaryDbColumnForSeries(key){
 }
 
 async function fetchLatest(key){
-  const { table, orderBy } = dbConfig[key];
-  let { data, error } = await supabase.from(table).select('*').order(orderBy,{ascending:false}).limit(1);
-  if(!error && data && data[0]){ state[key]=fromDb(key, data[0]); updateCard(key); }
-  const col = primaryDbColumnForSeries(key); if(!col) return;
-  const sel = `${col}`;
-  const { data: series, error: sErr } = await supabase.from(table).select(sel).order(orderBy,{ascending:false}).limit(12);
-  if(!sErr && series){
-    const arr = series.map(r=>Number(r[col])).filter(n=>isFinite(n)).reverse();
-    state._series[key]=arr; drawSpark(key, arr);
+  try{
+    const { table, orderBy } = dbConfig[key];
+    let { data, error } = await supabase.from(table).select('*').order(orderBy,{ascending:false}).limit(1);
+    if(!error && data && data[0]){ state[key]=fromDb(key, data[0]); updateCard(key); }
+
+    const col = primaryDbColumnForSeries(key); if(!col) return;
+    const sel = `${col}`;
+    const { data: series, error: sErr } = await supabase.from(table).select(sel).order(orderBy,{ascending:false}).limit(12);
+    if(!sErr && series){
+      const arr = series.map(r=>Number(r[col])).filter(n=>isFinite(n)).reverse();
+      state._series[key]=arr; drawSpark(key, arr);
+    }
+  }catch(err){
+    console.warn(`[fetchLatest] ${key}:`, err?.message || err);
   }
 }
 
 async function loadAll(){
-  $$('.card').forEach(c=>c.classList.add('loading'));
-  await Promise.all(Object.keys(dbConfig).map(k=>fetchLatest(k)));
-  $$('.card').forEach(c=>c.classList.remove('loading'));
-  updateKpis();
-  updateBadges();
+  try{
+    $$('.card').forEach(c=>c.classList.add('loading'));
+    await Promise.all(Object.keys(dbConfig).map(k=>fetchLatest(k)));
+  }finally{
+    $$('.card').forEach(c=>c.classList.remove('loading'));
+    updateKpis();
+    updateBadges();
+  }
 }
 
 // Realtime INSERT
@@ -312,28 +321,36 @@ function drawSpark(key, arr){
                    <circle cx="${scaleX(arr.length-1)}" cy="${scaleY(arr[arr.length-1])}" r="2.5" fill="currentColor"/>`;
 }
 
+// === KPIs alinhados ao HTML (total/entrada/saída/saldo) e robusto a erros ===
+function buildKpisFromState() {
+  // usa a tabela "geral" se existir
+  if (state?.geral && Object.keys(state.geral).length) {
+    const { estoque_total, entrada, saida, saldo } = state.geral;
+    return {
+      total: Number(estoque_total),
+      entrada: Number(entrada),
+      saida: Number(saida),
+      saldo: Number(saldo),
+    };
+  }
+  // fallback simples
+  let total = 0, entrada = 0, saida = 0;
+  ['soja','milho','trigo','lenha'].forEach(k=>{
+    const r = state[k] || {};
+    if (isFinite(+r.estoque)) total += +r.estoque;
+    if (isFinite(+r.entrada)) entrada += +r.entrada;
+    if (isFinite(+r.saida))   saida   += +r.saida;
+  });
+  const saldo = total + entrada - saida;
+  return { total, entrada, saida, saldo };
+}
 function updateKpis(){
-  const keysEstoque=['soja','milho','trigo','lenha'];
-  const somaEstoque = keysEstoque.map(k=>Number(state[k]?.estoque)).filter(n=>isFinite(n)).reduce((a,b)=>a+b,0);
-  $('#kpi-estoque').textContent = somaEstoque? new Intl.NumberFormat('pt-BR').format(somaEstoque) : '--';
-  $('#kpi-estoque-hint').textContent = 'atualizado ' + new Date().toLocaleString('pt-BR');
-
-  // Meta média (%) = recebimento / meta * 100
-  const percentuais = keysEstoque.map(k=>{
-    const m=Number(state[k]?.meta);
-    const r=Number(state[k]?.recebimento);
-    return (isFinite(m) && isFinite(r) && m>0) ? (r/m*100) : null;
-  }).filter(v=>v!=null);
-  const media = percentuais.length? (percentuais.reduce((a,b)=>a+b,0)/percentuais.length) : null;
-  $('#kpi-meta').textContent = media? media.toFixed(1)+'%' : '--%';
-
-  const u=Number(state.armazenamento?.utilizado), c=Number(state.armazenamento?.capacidade);
-  const occ=(isFinite(u)&&isFinite(c)&&c>0)?(u/c*100):null;
-  $('#kpi-armazenamento').textContent = occ? occ.toFixed(1)+'%' : '--%';
-
-  const a=Number(state.pessoa?.ativos), t=Number(state.pessoa?.total);
-  const ativ=(isFinite(a)&&isFinite(t)&&t>0)?(a/t*100):null;
-  $('#kpi-pessoas').textContent = ativ? ativ.toFixed(1)+'%' : '--%';
+  const k = buildKpisFromState();
+  const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = fmt(val); };
+  set('kpi-total',   k.total);
+  set('kpi-entrada', k.entrada);
+  set('kpi-saida',   k.saida);
+  set('kpi-saldo',   k.saldo);
 }
 
 function setProgressBar(i, pct){
@@ -346,7 +363,7 @@ function setProgressBar(i, pct){
 
 function updateBadges(){
   const counts = {
-    operacao: $('.main .card').length,
+    operacao: $('.main .card') ? $$('.main .card').length : 0,
     estoques: $$('.main .card[data-cat="estoques"]').length,
     pessoas: $$('.main .card[data-cat="pessoas"]').length,
     armazenagem: $$('.main .card[data-cat="armazenagem"]').length
