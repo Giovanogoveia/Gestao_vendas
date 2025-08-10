@@ -8,15 +8,15 @@
 </head>
 <body>
   <header>
-    <div class="brand">
-      <h1>Unidade de Bandeirantes-290</h1>
-      <p class="subtitle">Operação • Estoques • Pessoas • Armazenagem</p>
+    <div class="brand" style="text-align:center;">
+      <h1 style="font-size:2rem;">Unidade de Bandeirantes-290</h1>
+      <p class="subtitle" style="font-size:1.2rem;">Operação • Estoques • Pessoas • Armazenagem</p>
     </div>
-    <div class="header-actions">
+    <div class="header-actions" style="justify-content:center; display:flex; gap:10px; margin-top:10px;">
       <button id="themeToggle" class="icon-btn" title="Alternar tema">🌗 Tema</button>
       <button id="refreshBtn" class="icon-btn" title="Atualizar">⟳ Atualizar</button>
     </div>
-    <nav class="tabs" id="tabs" aria-label="Seções do painel">
+    <nav class="tabs" id="tabs" aria-label="Seções do painel" style="justify-content:center;">
       <button class="tab active" data-cat="operacao">📊 Operação</button>
       <button class="tab" data-cat="estoques">🌾 Estoques</button>
       <button class="tab" data-cat="pessoas">👥 Pessoas</button>
@@ -24,7 +24,15 @@
     </nav>
   </header>
 
-  <section class="kpis" id="kpis"></section>
+  <!-- KPIs pré-carregados -->
+  <section class="kpis" id="kpis">
+  <!-- KPIs pré-montados para evitar erros no JS -->
+  <div class="kpi"><b>Total</b><span id="kpi-total">--</span></div>
+  <div class="kpi"><b>Entrada</b><span id="kpi-entrada">--</span></div>
+  <div class="kpi"><b>Saída</b><span id="kpi-saida">--</span></div>
+  <div class="kpi"><b>Saldo</b><span id="kpi-saldo">--</span></div>
+</section>
+
   <main class="main" id="cards"></main>
 
   <section class="materials">
@@ -48,8 +56,8 @@
 
   <div class="toast" id="toast">Salvo com sucesso.</div>
 
- <script type="module" src="script.js"></script>
-
+  <script type="module" src="script.js"></script>
 </body>
 </html>
+
 
