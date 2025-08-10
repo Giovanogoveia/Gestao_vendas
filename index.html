@@ -337,8 +337,18 @@
 
   // ========= Config DB =========
   const dbConfig = {
-    soja: { table: 'soja', orderBy: 'created_at',
-      map: { estoque:'estoque', meta:'meta', recebimento:'recebimento', percentual:'percentual' } },
+    const dbConfig = {
+  // SOJA — corrige colunas e coluna de ordenação:
+  soja: { 
+    table: 'soja',
+    orderBy: 'timestamp',                 // era created_at (não existe)
+    map: {
+      estoque: 'estoqueatual',           // era 'estoque'
+      meta: 'meta',
+      recebimento: 'recebimento',
+      percentual: 'pencentual_metal'     // grava no campo correto
+    }
+  },
     // milho: colunas reais em minúsculas conforme o schema informado
     milho: { table: 'milho', orderBy: 'timestamp',
       map: { estoque:'estoqueatual', meta:'meta', recebimento:'recebimento', percentual:'pencentual_metal' } },
