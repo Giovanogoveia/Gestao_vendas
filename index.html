@@ -337,7 +337,16 @@
 
   // ========= Config DB =========
   const dbConfig = {
-    soja: {table: 'soja',orderBy: 'timestamp', map: {estoque: 'estoqueatual', meta: 'meta', recebimento: 'recebimento', percentual: 'pencentual_metal'}},
+  soja: {
+    table: 'soja',
+    orderBy: 'timestamp',
+    map: {
+      estoque:     'estoqueatual',      // <- minúsculo
+      meta:        'meta',
+      recebimento: 'recebimento',
+      percentual:  'pencentual_metal'   // <- igual ao DB
+    }
+  },
    
     // milho: colunas reais em minúsculas conforme o schema informado
     milho: { table: 'milho', orderBy: 'timestamp',
