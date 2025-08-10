@@ -67,26 +67,30 @@
     @keyframes shimmer{to{background-position-x:-200%}}
 
     /* Overlay/Form */
-    .overlay{position:fixed;inset:0;display:none;place-items:center;background:color-mix(in oklab,black 35%,transparent);backdrop-filter:blur(3px);z-index:50;padding:16px}
+    .overlay{position:fixed;inset:0;display:none;place-items:center;background:color-mix(in oklab,black 35%,transparent);backdrop-filter:blur(3px);z-index:9999;padding:16px}
     .overlay.active{display:grid}
-    .form{width:min(560px,92vw);background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:18px;display:grid;gap:12px;position:relative}
-    .form h2{margin:0 0 4px;font-size:1.05rem}
-    .form .close{position:absolute;top:10px;right:10px;border:none;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;line-height:1}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .form{width:min(420px,92vw);background:color-mix(in oklab,var(--surface) 85%,transparent);border:1px solid color-mix(in oklab,var(--border) 60%,transparent);border-radius:16px;box-shadow:var(--shadow);padding:14px;display:grid;gap:10px;position:relative;backdrop-filter:blur(8px)}
+    .form h2{margin:0 0 2px;font-size:1rem;letter-spacing:.2px}
+    .form .close{position:absolute;top:8px;right:8px;border:none;background:transparent;color:var(--muted);font-size:18px;cursor:pointer;line-height:1}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     @media(max-width:560px){.row{grid-template-columns:1fr}}
-    .field{display:grid;gap:6px}
-    .label{font-size:.85rem;color:var(--muted)}
-    .hint{font-size:.75rem;color:var(--muted)}
+    .field{position:relative;display:grid;gap:4px;padding-top:6px}
+    .label{position:absolute;left:12px;top:10px;font-size:.85rem;color:var(--muted);transition:transform .18s ease,color .18s ease,opacity .18s ease;background:var(--surface);padding:0 6px;border-radius:6px;pointer-events:none;opacity:.9}
     .error-msg{font-size:.8rem;color:var(--danger);min-height:1em}
-    .input{width:100%;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:10px;padding:10px 12px;font-size:1rem;outline:none}
-    .input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in oklab,var(--accent) 25%,transparent)}
+    .hint{font-size:.76rem;color:var(--muted)}
+    /* Floating label */
+    .field .label{position:absolute;left:12px;top:10px;font-size:.85rem;color:var(--muted);transition:transform .18s ease,color .18s ease,opacity .18s ease;background:var(--surface);padding:0 6px;border-radius:6px;pointer-events:none;opacity:.9}
+    .field.is-filled .label,.field:focus-within .label{transform:translateY(-12px) scale(.9);color:var(--accent);opacity:1}
+    .input::placeholder{color:transparent}
+    .input{width:100%;height:40px;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:10px;padding:18px 12px 8px;font-size:.95rem;outline:none;transition:border-color .15s ease,box-shadow .15s ease}
+    .input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in oklab,var(--accent) 25%,transparent),0 0 0 1px color-mix(in oklab,var(--accent) 40%,transparent)}
     .input[readonly]{background:color-mix(in oklab,var(--surface) 70%,var(--bg));color:var(--muted)}
     .input.error{border-color:var(--danger)!important;box-shadow:0 0 0 3px color-mix(in oklab,var(--danger) 30%,transparent)!important}
-    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
-    .btn-secondary{background:transparent;color:var(--text);border-color:var(--border)}
+    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:2px}
+    .btn-secondary{background:transparent;color:var(--text);border-color:var(--border);padding:8px 10px;font-size:.85rem}
     .btn-secondary:hover{background:color-mix(in oklab,var(--accent) 12%,transparent);color:var(--text)}
-
     /* Materiais */
+    
     .materials{max-width:1200px;margin:10px auto 40px;padding:0 16px}
     .materials h3{margin:10px 0 6px}
     .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
@@ -470,7 +474,13 @@
     });
     fieldsBox.appendChild(frag);
     const current = state[key] || {};
-    fieldsBox.querySelectorAll('input').forEach(i=>{ const k=i.dataset.key; if(current[k]!=null) i.value=current[k]; });
+    fieldsBox.querySelectorAll('input').forEach(i=>{
+      const k=i.dataset.key; if(current[k]!=null) i.value=current[k];
+      const wrap=i.closest('.field'); if(wrap && i.value!=='' && i.value!=null) wrap.classList.add('is-filled');
+      i.addEventListener('input',()=>{
+        const w=i.closest('.field'); if(!w) return; if(i.value!==''&&i.value!=null) w.classList.add('is-filled'); else w.classList.remove('is-filled');
+      });
+    });
     maybeWirePercentCalc();
     maybeWireStorageCalc();
     showOverlay();
@@ -652,6 +662,15 @@
     i.style.width = pct + '%';
   }
 
+  function updateBadges(){
+    const counts = {operacao: $('.main .card').length, estoques: $$('.main .card[data-cat="estoques"]').length, pessoas: $$('.main .card[data-cat="pessoas"]').length, armazenagem: $$('.main .card[data-cat="armazenagem"]').length};
+    $$('.tabs .tab').forEach(tab=>{
+      let b = tab.querySelector('.badge-pill');
+      if(!b){ b=document.createElement('span'); b.className='badge-pill'; tab.appendChild(b); }
+      b.textContent = counts[tab.dataset.cat] ?? 0;
+    });
+  }
+
   function updateCard(key){
     const card = document.querySelector(`.card[data-key="${key}"]`); if(!card) return;
     const data = state[key] || {};
@@ -683,94 +702,21 @@
       if(pctSpan && !pctSpan.textContent.trim()) pctSpan.textContent = pct.toFixed(1);
     }
 
-    // preço (pega primeiro número como destaque)
-    const price = card.querySelector('.price');
-    if(price){
-      const numbers = Object.values(data||{}).map(v=>Number(v)).filter(v=>isFinite(v));
-      price.textContent = numbers.length?`R$: ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(numbers[0])}`:'R$: --';
-    }
-
-    // spark
     if(state._series[key]) drawSpark(key, state._series[key]);
-
     updateKpis();
-    updateBadges();
   }
 
-  // ========= Bind Botões =========
-  $$('.btn[data-open]').forEach(btn=>btn.addEventListener('click',()=>openForm(btn.dataset.open)));
-  refreshBtn.addEventListener('click',()=>{ loadAll(); showToast('Atualizado'); });
+  // Botões
+  // Delegação de eventos para garantir funcionamento mesmo após re-renderizações
+  document.addEventListener('click', (e)=>{
+    const btn = e.target.closest('[data-open]');
+    if(btn){ e.preventDefault(); openForm(btn.dataset.open); }
+  });
+  refreshBtn.addEventListener('click', loadAll);
 
-  // ========= Start =========
-  (async()=>{ await loadAll(); })();
-
-  // ========= Testes rápidos (sanidade) =========
-  (function runSelfTests(){
-    try{
-      console.group('%cSanidade do Dashboard','color:#22c55e;font-weight:900');
-      // Teste 1: Tabs alternam categorias
-      setTab('estoques');
-      const allCards = $$('.main .card');
-      const hiddenOk = allCards.every(c => (c.dataset.cat==='estoques') ? (c.style.display!=='none') : (c.style.display==='none'));
-      console.assert(hiddenOk, '[Tabs] deveria filtrar por categoria');
-      setTab('operacao');
-
-      // Teste 2: Form de milho renderiza campos esperados
-      openForm('milho');
-      const hasMeta = !!fieldsBox.querySelector('input[data-key="meta"]');
-      const hasReceb = !!fieldsBox.querySelector('input[data-key="recebimento"]');
-      const hasPct = !!fieldsBox.querySelector('input[data-key="percentual"]');
-      console.assert(hasMeta && hasReceb && hasPct,'[Form] campos meta/recebimento/percentual presentes');
-
-      // Teste 3: Cálculo percentual = recebimento/meta*100 (estoque não entra)
-      const m = fieldsBox.querySelector('input[data-key="meta"]');
-      const r = fieldsBox.querySelector('input[data-key="recebimento"]');
-      const p = fieldsBox.querySelector('input[data-key="percentual"]');
-      m.value='200'; r.value='400';
-      m.dispatchEvent(new Event('input')); r.dispatchEvent(new Event('input'));
-      console.assert(p.value==='200.0','[Percentual] esperado 200.0 quando meta=200 receb=400');
-      // Teste 3b: meta=0 => vazio
-      m.value='0'; r.value='100';
-      m.dispatchEvent(new Event('input')); r.dispatchEvent(new Event('input'));
-      console.assert(p.value==='','[Percentual] quando meta=0 deve ficar vazio');
-      hideOverlay();
-
-      console.groupEnd();
-    }catch(err){ console.error('Falha nos testes de sanidade', err); }
-  })();
-
-  // ========= Funções auxiliares =========
-  function updateBadges(){
-    // Atualiza badges e barras com base no estado
-    ['soja','milho','trigo','lenha'].forEach(key=>{
-      const card = document.querySelector(`.card[data-key="${key}"]`); if(!card) return;
-      const span = card.querySelector('[data-f="percentual"]');
-      let pct = Number(state[key]?.percentual);
-      if(!isFinite(pct)){
-        const m = Number(state[key]?.meta); const r = Number(state[key]?.recebimento);
-        pct = (isFinite(m) && isFinite(r) && m>0) ? (r/m*100) : NaN;
-      }
-      if(isFinite(pct)){
-        span.textContent = Number(pct).toFixed(1);
-        const bar = card.querySelector(`[data-prog="${key}"]`); if(bar) setProgressBar(bar, Math.max(0,Math.min(100,pct)));
-      }
-    });
-    // Armazenamento
-    (function(){
-      const key='armazenamento'; const card=document.querySelector(`.card[data-key="${key}"]`); if(!card) return;
-      const u=Number(state[key]?.utilizado), c=Number(state[key]?.capacidade);
-      const pct=isFinite(u)&&isFinite(c)&&c>0?(u/c*100):NaN; const bar=card.querySelector('[data-prog="armazenamento"]');
-      if(bar&&isFinite(pct)) setProgressBar(bar, Math.max(0,Math.min(100,pct)));
-    })();
-    // Pessoas
-    (function(){
-      const key='pessoa'; const card=document.querySelector(`.card[data-key="${key}"]`); if(!card) return;
-      const a=Number(state[key]?.ativos), t=Number(state[key]?.total);
-      const pct=isFinite(a)&&isFinite(t)&&t>0?(a/t*100):NaN; const bar=card.querySelector('[data-prog="pessoa"]');
-      if(bar&&isFinite(pct)) setProgressBar(bar, Math.max(0,Math.min(100,pct)));
-    })();
-  }
-</script>
+  // Carregamento inicial
+  loadAll();
+  </script>
 
 </body>
 </html>
