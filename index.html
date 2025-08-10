@@ -2,126 +2,319 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sistema de Gestão</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard • Unidade Bandeirantes-290</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
-    header { background: #2c3e50; color: white; padding: 15px; text-align: center; }
-    nav { background: #34495e; display: flex; justify-content: center; }
-    nav button {
-      background: none; border: none; color: white; padding: 15px; cursor: pointer;
+    :root{
+      --bg:#f6f7fb;--surface:#ffffff;--text:#0f172a;--muted:#64748b;--border:#e5e7eb;
+      --accent:#22c55e;--accent-ink:#052e16;--danger:#ef4444;--shadow:0 10px 30px rgba(2,6,23,.08);--radius:16px;
+      --fs-h1:clamp(1.2rem,.9rem+1.2vw,1.75rem);--fs-lg:1rem;--fs-sm:.9rem
     }
-    nav button:hover { background: #2c3e50; }
-    section { display: none; padding: 20px; }
-    section.active { display: block; }
-    input, select, button { padding: 5px; margin: 5px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background: #ecf0f1; }
+    @media (prefers-color-scheme:dark){:root{--bg:#0b1020;--surface:#0f1629;--text:#e5e7eb;--muted:#94a3b8;--border:#1f2937;--accent:#22d36a;--accent-ink:#052e16;--shadow:0 10px 30px rgba(0,0,0,.45)}}
+    *{box-sizing:border-box}html,body{height:100%}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",Helvetica,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    header{display:grid;gap:6px;justify-items:center;padding:24px 12px 8px}h1{margin:0;font-size:var(--fs-h1)}.subtitle{color:var(--muted);font-size:var(--fs-sm)}
+    .main{max-width:1200px;margin:0 auto;padding:16px;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+    .card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:clip;outline:none;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;display:grid;grid-template-rows:auto 1fr auto;min-height:180px;isolation:isolate}
+    .card:where(:hover,:focus-within){transform:translateY(4px);border-color:color-mix(in oklab,var(--accent) 30%,var(--border));box-shadow:0 18px 50px rgba(2,6,23,.12)}
+    .card-header{display:flex;align-items:center;gap:12px;padding:14px}.card-thumb{width:56px;height:56px;border-radius:12px;object-fit:cover;flex:0 0 auto;box-shadow:inset 0 0 0 1px var(--border)}.card-title{font-weight:700;font-size:var(--fs-lg)}.card-sub{color:var(--muted);font-size:var(--fs-sm)}
+    .card-body{padding:0 14px 12px}.kv{display:grid;gap:6px;font-size:var(--fs-sm)}.kv b{font-weight:600;color:var(--muted)}
+    .card-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 14px}.price{font-weight:800;letter-spacing:.2px}
+    .btn{appearance:none;border:1px solid var(--border);background:var(--text);color:#fff;font-weight:700;font-size:.85rem;border-radius:12px;padding:10px 12px;cursor:pointer;transition:transform .15s ease,background-color .2s ease,color .2s ease,border-color .2s ease}
+    .btn:hover{background:var(--accent);color:var(--accent-ink);border-color:transparent;transform:translateY(1px)}
+    .overlay{position:fixed;inset:0;display:none;place-items:center;background:color-mix(in oklab,black 35%,transparent);backdrop-filter:blur(3px);z-index:50;padding:16px}
+    .overlay.active{display:grid}
+    .form{width:min(560px,92vw);background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:18px;display:grid;gap:12px;position:relative}
+    .form h2{margin:0 0 4px;font-size:1.05rem}.form .close{position:absolute;top:10px;right:10px;border:none;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;line-height:1}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:560px){.row{grid-template-columns:1fr}}
+    .field{display:grid;gap:6px}.label{font-size:.85rem;color:var(--muted)}.input{width:100%;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:10px;padding:10px 12px;font-size:1rem;outline:none}
+    .input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in oklab,var(--accent) 25%,transparent)}.input[readonly]{background:color-mix(in oklab,var(--surface) 70%,var(--bg));color:var(--muted)}
+    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}.btn-secondary{background:transparent;color:var(--text);border-color:var(--border)}.btn-secondary:hover{background:color-mix(in oklab,var(--accent) 12%,transparent);color:var(--text)}
+    .toast{position:fixed;bottom:18px;left:50%;translate:-50% 0;background:var(--text);color:#fff;border-radius:12px;padding:10px 14px;font-size:.9rem;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .25s ease,translate .25s ease;z-index:60}
+    .toast.show{opacity:1;translate:-50% -6px}
+    @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
   </style>
 </head>
 <body>
+  <header>
+    <h1>Unidade de Bandeirantes-290</h1>
+    <p class="subtitle">Cards modernos + formulários acessíveis e integração Supabase</p>
+  </header>
 
-<header>
-  <h1>Sistema de Gestão</h1>
-</header>
+  <main class="main" id="cards">
+    <article class="card" data-key="soja">
+      <div class="card-header">
+        <img class="card-thumb" alt="Soja" src="https://images.unsplash.com/photo-1528821154947-1aa3d1b749f9?q=80&w=320&auto=format&fit=crop"/>
+        <div><div class="card-title">Soja</div><div class="card-sub">Estoque, meta, recebimento</div></div>
+      </div>
+      <div class="card-body"><div class="kv" id="detalhes-soja"><div><b>Estoque:</b> <span data-f="estoque">--</span></div><div><b>Meta:</b> <span data-f="meta">--</span></div><div><b>Recebimento:</b> <span data-f="recebimento">--</span></div><div><b>Meta %:</b> <span data-f="percentual">--</span></div></div></div>
+      <div class="card-footer"><div class="price" id="preco-soja">R$: --</div><button class="btn" data-open="soja">Editar</button></div>
+    </article>
 
-<nav>
-  <button onclick="showSection('usuarios')">Usuários</button>
-  <button onclick="showSection('produtos')">Produtos</button>
-  <button onclick="showSection('clientes')">Clientes</button>
-  <button onclick="showSection('vendas')">Vendas</button>
-</nav>
+    <article class="card" data-key="milho">
+      <div class="card-header">
+        <img class="card-thumb" alt="Milho" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=320&auto=format&fit=crop"/>
+        <div><div class="card-title">Milho</div><div class="card-sub">Estoque, meta, recebimento</div></div>
+      </div>
+      <div class="card-body"><div class="kv" id="detalhes-milho"><div><b>Estoque:</b> <span data-f="estoque">--</span></div><div><b>Meta:</b> <span data-f="meta">--</span></div><div><b>Recebimento:</b> <span data-f="recebimento">--</span></div><div><b>Meta %:</b> <span data-f="percentual">--</span></div></div></div>
+      <div class="card-footer"><div class="price" id="preco-milho">R$: --</div><button class="btn" data-open="milho">Editar</button></div>
+    </article>
 
-<!-- Usuários -->
-<section id="usuarios" class="active">
-  <h2>Gestão de Usuários</h2>
-  <form id="formUsuario">
-    <input type="text" placeholder="Nome" required />
-    <input type="email" placeholder="Email" required />
-    <input type="password" placeholder="Senha" required />
-    <select required>
-      <option value="">Tipo</option>
-      <option value="admin">Administrador</option>
-      <option value="vendedor">Vendedor</option>
-    </select>
-    <button type="submit">Salvar</button>
-  </form>
-  <table>
-    <thead><tr><th>Nome</th><th>Email</th><th>Tipo</th></tr></thead>
-    <tbody id="listaUsuarios"></tbody>
-  </table>
-</section>
+    <article class="card" data-key="trigo">
+      <div class="card-header">
+        <img class="card-thumb" alt="Trigo" src="https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=320&auto=format&fit=crop"/>
+        <div><div class="card-title">Trigo</div><div class="card-sub">Estoque, meta, recebimento</div></div>
+      </div>
+      <div class="card-body"><div class="kv" id="detalhes-trigo"><div><b>Estoque:</b> <span data-f="estoque">--</span></div><div><b>Meta:</b> <span data-f="meta">--</span></div><div><b>Recebimento:</b> <span data-f="recebimento">--</span></div><div><b>Meta %:</b> <span data-f="percentual">--</span></div></div></div>
+      <div class="card-footer"><div class="price" id="preco-trigo">R$: --</div><button class="btn" data-open="trigo">Editar</button></div>
+    </article>
 
-<!-- Produtos -->
-<section id="produtos">
-  <h2>Gestão de Produtos</h2>
-  <form id="formProduto">
-    <input type="text" placeholder="Nome" required />
-    <input type="text" placeholder="Descrição" required />
-    <input type="number" placeholder="Estoque" required />
-    <input type="number" step="0.01" placeholder="Preço" required />
-    <button type="submit">Salvar</button>
-  </form>
-  <table>
-    <thead><tr><th>Nome</th><th>Descrição</th><th>Estoque</th><th>Preço</th></tr></thead>
-    <tbody id="listaProdutos"></tbody>
-  </table>
-</section>
+    <article class="card" data-key="lenha">
+      <div class="card-header">
+        <img class="card-thumb" alt="Lenha" src="https://images.unsplash.com/photo-1508193638397-1c4234db14d8?q=80&w=320&auto=format&fit=crop"/>
+        <div><div class="card-title">Lenha</div><div class="card-sub">Estoque, meta, recebimento</div></div>
+      </div>
+      <div class="card-body"><div class="kv" id="detalhes-lenha"><div><b>Estoque:</b> <span data-f="estoque">--</span></div><div><b>Meta:</b> <span data-f="meta">--</span></div><div><b>Recebimento:</b> <span data-f="recebimento">--</span></div><div><b>Meta %:</b> <span data-f="percentual">--</span></div></div></div>
+      <div class="card-footer"><div class="price" id="preco-lenha">R$: --</div><button class="btn" data-open="lenha">Editar</button></div>
+    </article>
 
-<!-- Clientes -->
-<section id="clientes">
-  <h2>Gestão de Clientes</h2>
-  <form id="formCliente">
-    <input type="text" placeholder="Nome" required />
-    <input type="text" placeholder="CPF/CNPJ" required />
-    <input type="email" placeholder="Email" />
-    <input type="text" placeholder="Telefone" />
-    <input type="text" placeholder="Endereço" />
-    <button type="submit">Salvar</button>
-  </form>
-  <table>
-    <thead><tr><th>Nome</th><th>CPF/CNPJ</th><th>Email</th><th>Telefone</th></tr></thead>
-    <tbody id="listaClientes"></tbody>
-  </table>
-</section>
+    <article class="card" data-key="armazenamento">
+      <div class="card-header">
+        <img class="card-thumb" alt="Silo" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=320&auto=format&fit=crop"/>
+        <div><div class="card-title">Armazenamento</div><div class="card-sub">Capacidade, utilizado, disponível</div></div>
+      </div>
+      <div class="card-body"><div class="kv" id="detalhes-armazenamento"><div><b>Capacidade:</b> <span data-f="capacidade">--</span></div><div><b>Utilizado:</b> <span data-f="utilizado">--</span></div><div><b>Disponível:</b> <span data-f="disponivel">--</span></div></div></div>
+      <div class="card-footer"><div class="price" id="preco-armazenamento">R$: --</div><button class="btn" data-open="armazenamento">Editar</button></div>
+    </article>
 
-<!-- Vendas -->
-<section id="vendas">
-  <h2>Registrar Venda</h2>
-  <form id="formVenda">
-    <select required>
-      <option value="">Selecione o cliente</option>
-      <!-- clientes serão inseridos aqui -->
-    </select>
-    <input type="date" required />
-    <input type="number" step="0.01" placeholder="Valor Total" required />
-    <button type="submit">Registrar</button>
-  </form>
+    <article class="card" data-key="pessoa">
+      <div class="card-header">
+        <img class="card-thumb" alt="Equipe" src="https://images.unsplash.com/photo-1551836022-4c4c79ecde51?q=80&w=320&auto=format&fit=crop"/>
+        <div><div class="card-title">Pessoa</div><div class="card-sub">Funcionários, ativos e inativos</div></div>
+      </div>
+      <div class="card-body"><div class="kv" id="detalhes-pessoa"><div><b>Total:</b> <span data-f="total">--</span></div><div><b>Ativos:</b> <span data-f="ativos">--</span></div><div><b>Inativos:</b> <span data-f="inativos">--</span></div></div></div>
+      <div class="card-footer"><div class="price" id="preco-pessoa">R$: --</div><button class="btn" data-open="pessoa">Editar</button></div>
+    </article>
 
-  <h3>Itens da Venda</h3>
-  <form id="formItemVenda">
-    <select required>
-      <option value="">Produto</option>
-      <!-- produtos serão inseridos aqui -->
-    </select>
-    <input type="number" placeholder="Quantidade" required />
-    <input type="number" step="0.01" placeholder="Preço Unitário" required />
-    <button type="submit">Adicionar Item</button>
-  </form>
+    <article class="card" data-key="geral">
+      <div class="card-header">
+        <img class="card-thumb" alt="Estoque geral" src="https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?q=80&w=320&auto=format&fit=crop"/>
+        <div><div class="card-title">Estoque Geral</div><div class="card-sub">Total, entrada, saída e saldo</div></div>
+      </div>
+      <div class="card-body"><div class="kv" id="detalhes-geral"><div><b>Total:</b> <span data-f="estoque_total">--</span></div><div><b>Entrada:</b> <span data-f="entrada">--</span></div><div><b>Saída:</b> <span data-f="saida">--</span></div><div><b>Saldo:</b> <span data-f="saldo">--</span></div></div></div>
+      <div class="card-footer"><div class="price" id="preco-geral">R$: --</div><button class="btn" data-open="geral">Editar</button></div>
+    </article>
+  </main>
 
-  <table>
-    <thead><tr><th>Produto</th><th>Quantidade</th><th>Preço Unitário</th></tr></thead>
-    <tbody id="listaItensVenda"></tbody>
-  </table>
-</section>
+  <div class="overlay" id="overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <form class="form" id="form" novalidate>
+      <button type="button" class="close" aria-label="Fechar" title="Fechar">✕</button>
+      <h2 id="form-title">Cadastro</h2>
+      <input type="hidden" id="context" />
+      <div class="fields"></div>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" data-cancel>Cancelar</button>
+        <button type="submit" class="btn">Salvar</button>
+      </div>
+      <div class="form-msg" aria-live="polite" style="height:1.1em;color:var(--accent);"></div>
+    </form>
+  </div>
 
-<script>
-  function showSection(id) {
-    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
+  <div class="toast" id="toast">Salvo com sucesso.</div>
+
+  <script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+  // Sua URL e ANON KEY
+  const SUPABASE_URL = 'https://dylziaqkyavkfwjepqkp.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5bHppYXFreWF2a2Z3amVwcWtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NTc1OTgsImV4cCI6MjA2ODAzMzU5OH0.gy5jXxKOTgeCf0Rwq7ktLTz1pyoZ8dJjZOK9UB9rHCM';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ===== Config por tabela: nome real, coluna de ordenação e mapa UI->DB =====
+  const dbConfig = {
+    soja: { table: 'soja', orderBy: 'created_at',
+      map: { estoque:'estoque', meta:'meta', recebimento:'recebimento', percentual:'percentual' } },
+    // ⚠ milho: colunas reais minúsculas (Postgres normaliza se não usar aspas)
+    milho: { table: 'milho', orderBy: 'timestamp',
+      map: { estoque:'estoqueatual', meta:'meta', recebimento:'recebimento', percentual:'pencentual_metal' } },
+    trigo: { table: 'trigo', orderBy: 'created_at',
+      map: { estoque:'estoque', meta:'meta', recebimento:'recebimento', percentual:'percentual' } },
+    lenha: { table: 'lenha', orderBy: 'created_at',
+      map: { estoque:'estoque', meta:'meta', recebimento:'recebimento', percentual:'percentual' } },
+    armazenamento: { table: 'armazenamento', orderBy: 'created_at',
+      map: { capacidade:'capacidade', utilizado:'utilizado', disponivel:'disponivel' } },
+    pessoa: { table: 'pessoa', orderBy: 'created_at',
+      map: { total:'total', ativos:'ativos', inativos:'inativos' } },
+    geral: { table: 'geral', orderBy: 'created_at',
+      map: { estoque_total:'estoque_total', entrada:'entrada', saida:'saida', saldo:'saldo' } },
+  };
+
+  // Schemas de campos (UI)
+  const schemas = {
+    soja:{title:'Cadastro Soja',fields:[
+      {key:'estoque',label:'Estoque Atual',type:'number',required:true},
+      {key:'meta',label:'Meta',type:'number',required:true},
+      {key:'recebimento',label:'Recebimento',type:'number',required:true},
+      {key:'percentual',label:'Percentual Meta (%)',type:'number',readonly:true}
+    ]},
+    milho:{title:'Cadastro Milho',fields:[
+      {key:'estoque',label:'Estoque Atual',type:'number',required:true},
+      {key:'meta',label:'Meta',type:'number',required:true},
+      {key:'recebimento',label:'Recebimento',type:'number',required:true},
+      {key:'percentual',label:'Percentual Meta (%)',type:'number',readonly:true}
+    ]},
+    trigo:{title:'Cadastro Trigo',fields:[
+      {key:'estoque',label:'Estoque Atual',type:'number',required:true},
+      {key:'meta',label:'Meta',type:'number',required:true},
+      {key:'recebimento',label:'Recebimento',type:'number',required:true},
+      {key:'percentual',label:'Percentual Meta (%)',type:'number',readonly:true}
+    ]},
+    lenha:{title:'Cadastro Lenha',fields:[
+      {key:'estoque',label:'Estoque Atual',type:'number',required:true},
+      {key:'meta',label:'Meta',type:'number',required:true},
+      {key:'recebimento',label:'Recebimento',type:'number',required:true},
+      {key:'percentual',label:'Percentual Meta (%)',type:'number',readonly:true}
+    ]},
+    armazenamento:{title:'Cadastro Armazenamento',fields:[
+      {key:'capacidade',label:'Capacidade Total',type:'number',required:true},
+      {key:'utilizado',label:'Utilizado',type:'number',required:true},
+      {key:'disponivel',label:'Disponível',type:'number',required:true}
+    ]},
+    pessoa:{title:'Cadastro Pessoa',fields:[
+      {key:'total',label:'Total de Funcionários',type:'number',required:true},
+      {key:'ativos',label:'Ativos',type:'number',required:true},
+      {key:'inativos',label:'Inativos',type:'number',required:true}
+    ]},
+    geral:{title:'Cadastro Estoque Geral',fields:[
+      {key:'estoque_total',label:'Estoque Total',type:'number',required:true},
+      {key:'entrada',label:'Entrada',type:'number',required:true},
+      {key:'saida',label:'Saída',type:'number',required:true},
+      {key:'saldo',label:'Saldo',type:'number',required:true}
+    ]}
+  };
+
+  // Estado local
+  const state = { soja:{}, milho:{}, trigo:{}, lenha:{}, armazenamento:{}, pessoa:{}, geral:{} };
+
+  // ===== utilitários para mapear dados UI <-> DB =====
+  const invert = (obj)=>Object.fromEntries(Object.entries(obj).map(([a,b])=>[b,a]));
+  const toDb = (key, uiRow)=>{
+    const map = dbConfig[key].map || {};
+    const out = {};
+    Object.entries(uiRow).forEach(([k,v]) => out[ map[k] || k ] = v);
+    return out;
+  };
+  const fromDb = (key, dbRow)=>{
+    const rev = invert(dbConfig[key].map || {});
+    const out = {};
+    Object.entries(dbRow||{}).forEach(([k,v]) => out[ rev[k] || k ] = v);
+    return out;
+  };
+
+  // ===== UI refs =====
+  const overlay = document.getElementById('overlay');
+  const form = document.getElementById('form');
+  const fieldsBox = form.querySelector('.fields');
+  const formTitle = document.getElementById('form-title');
+  const contextInput = document.getElementById('context');
+  const toast = document.getElementById('toast');
+
+  document.querySelectorAll('[data-open]').forEach(btn=>btn.addEventListener('click',()=>openForm(btn.dataset.open)));
+
+  function openForm(key){
+    const schema = schemas[key]; if(!schema) return;
+    formTitle.textContent = schema.title; contextInput.value = key; fieldsBox.innerHTML='';
+    const frag = document.createDocumentFragment();
+    schema.fields.forEach(f=>{
+      const id = `f_${key}_${f.key}`;
+      const wrap = document.createElement('div'); wrap.className='field';
+      wrap.innerHTML = `<label for="${id}" class="label">${f.label}${f.required?' *':''}</label>
+        <input id="${id}" class="input" inputmode="decimal" ${f.readonly?'readonly':''} type="${f.type}" data-key="${f.key}" ${f.required?'required':''}/>`;
+      frag.appendChild(wrap);
+    });
+    fieldsBox.appendChild(frag);
+    // valores atuais
+    const current = state[key] || {};
+    fieldsBox.querySelectorAll('input').forEach(i=>{ const k=i.dataset.key; if(current[k]!=null) i.value=current[k]; });
+    maybeWirePercentCalc(); showOverlay(); fieldsBox.querySelector('input:not([readonly])')?.focus();
   }
+
+  function maybeWirePercentCalc(){
+    const pct = fieldsBox.querySelector('input[data-key="percentual"]'); if(!pct) return;
+    const estoque = fieldsBox.querySelector('input[data-key="estoque"]');
+    const meta = fieldsBox.querySelector('input[data-key="meta"]');
+    const calc = ()=>{ const e=parseFloat(estoque.value), m=parseFloat(meta.value); pct.value=(isFinite(e)&&isFinite(m)&&m>0)?((e/m)*100).toFixed(1):''; };
+    estoque?.addEventListener('input',calc); meta?.addEventListener('input',calc); calc();
+  }
+
+  function showOverlay(){ overlay.classList.add('active'); overlay.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function hideOverlay(){ overlay.classList.remove('active'); overlay.setAttribute('aria-hidden','true'); document.body.style.overflow=''; form.reset(); fieldsBox.innerHTML=''; }
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) hideOverlay(); });
+  form.querySelector('.close').addEventListener('click', hideOverlay);
+  form.querySelector('[data-cancel]').addEventListener('click', hideOverlay);
+  window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&overlay.classList.contains('active')) hideOverlay(); });
+
+  // ===== submit -> insert (mapeado) =====
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const key = contextInput.value;
+    const { table } = dbConfig[key];
+    const inputs = [...fieldsBox.querySelectorAll('input')];
+    for(const i of inputs){ if(i.hasAttribute('required') && !i.value){ i.focus(); return; } }
+    const uiRow = Object.fromEntries(inputs.map(i=>[i.dataset.key, normalizeNumber(i.value)]));
+    const dbRow = toDb(key, uiRow);
+    const { data, error } = await supabase.from(table).insert(dbRow).select().single();
+    if(error){ showToast('Erro ao salvar: '+error.message); return; }
+    state[key] = fromDb(key, data);
+    updateCard(key);
+    hideOverlay();
+    showToast('Salvo com sucesso.');
+  });
+
+  function normalizeNumber(v){ if(v===''||v==null) return null; const n=Number(v.toString().replace(',','.')); return isFinite(n)?n:v; }
+
+  // ===== fetch último registro (ordenação com fallback) =====
+  async function fetchLatest(key){
+    const { table, orderBy } = dbConfig[key];
+    const orderCandidates = [...new Set([orderBy,'created_at','timestamp'])];
+    for(const col of orderCandidates){
+      const { data, error } = await supabase.from(table).select('*').order(col,{ascending:false}).limit(1);
+      if(!error){ if(data && data[0]){ state[key]=fromDb(key, data[0]); updateCard(key); } return; }
+    }
+    console.warn('fetchLatest falhou para', key);
+  }
+  async function loadAll(){ await Promise.all(Object.keys(dbConfig).map(fetchLatest)); }
+
+  // ===== realtime (INSERT) =====
+  Object.entries(dbConfig).forEach(([key,{table}])=>{
+    supabase.channel(`realtime:${table}`)
+      .on('postgres_changes',{ event:'INSERT', schema:'public', table },(payload)=>{
+        state[key]=fromDb(key, payload.new);
+        updateCard(key);
+      })
+      .subscribe();
+  });
+
+  function updateCard(key){
+    const card = document.querySelector(`.card[data-key="${key}"]`); if(!card) return;
+    const data = state[key];
+    card.querySelectorAll('[data-f]').forEach(span=>{
+      const k=span.getAttribute('data-f');
+      let val=data?.[k];
+      if(typeof val==='number') val=new Intl.NumberFormat('pt-BR').format(val);
+      span.textContent=(val??'--');
+    });
+    const price = card.querySelector('.price');
+    if(price){
+      const numbers = Object.values(data||{}).map(v=>Number(v)).filter(v=>isFinite(v));
+      price.textContent = numbers.length?`R$: ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(numbers[0])}`:'R$: --';
+    }
+  }
+
+  function showToast(msg){ toast.textContent=msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1800); }
+
+  loadAll();
 </script>
 
 </body>
 </html>
+
