@@ -10,100 +10,240 @@
       --accent:#22c55e;--accent-ink:#052e16;--danger:#ef4444;--shadow:0 10px 30px rgba(2,6,23,.08);--radius:16px;
       --fs-h1:clamp(1.2rem,.9rem+1.2vw,1.75rem);--fs-lg:1rem;--fs-sm:.9rem
     }
-    @media (prefers-color-scheme:dark){:root{--bg:#0b1020;--surface:#0f1629;--text:#e5e7eb;--muted:#94a3b8;--border:#1f2937;--accent:#22d36a;--accent-ink:#052e16;--shadow:0 10px 30px rgba(0,0,0,.45)}}
-    *{box-sizing:border-box}html,body{height:100%}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",Helvetica,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-    header{display:grid;gap:6px;justify-items:center;padding:24px 12px 8px}h1{margin:0;font-size:var(--fs-h1)}.subtitle{color:var(--muted);font-size:var(--fs-sm)}
-    .main{max-width:1200px;margin:0 auto;padding:16px;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-    .card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:clip;outline:none;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;display:grid;grid-template-rows:auto 1fr auto;min-height:180px;isolation:isolate}
-    .card:where(:hover,:focus-within){transform:translateY(4px);border-color:color-mix(in oklab,var(--accent) 30%,var(--border));box-shadow:0 18px 50px rgba(2,6,23,.12)}
-    .card-header{display:flex;align-items:center;gap:12px;padding:14px}.card-thumb{width:56px;height:56px;border-radius:12px;object-fit:cover;flex:0 0 auto;box-shadow:inset 0 0 0 1px var(--border)}.card-title{font-weight:700;font-size:var(--fs-lg)}.card-sub{color:var(--muted);font-size:var(--fs-sm)}
-    .card-body{padding:0 14px 12px}.kv{display:grid;gap:6px;font-size:var(--fs-sm)}.kv b{font-weight:600;color:var(--muted)}
-    .card-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 14px}.price{font-weight:800;letter-spacing:.2px}
+    [data-theme="dark"]{--bg:#0b1020;--surface:#0f1629;--text:#e5e7eb;--muted:#94a3b8;--border:#1f2937;--accent:#22d36a;--accent-ink:#052e16;--shadow:0 10px 30px rgba(0,0,0,.45)}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",Helvetica,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    header{position:relative;display:grid;gap:10px;justify-items:center;text-align:center;padding:22px 16px}
+    .brand{display:grid;justify-items:center}
+    h1{margin:0;font-size:2.2rem;font-weight:800}
+    .subtitle{color:var(--muted);font-size:1.1rem;font-weight:700;margin-top:6px}
+    .header-actions{position:absolute;top:14px;right:16px;display:flex;gap:10px}
+    .icon-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow)}
+    .icon-btn:hover{background:color-mix(in oklab,var(--accent) 14%,var(--surface))}
+
+    .main{max-width:1200px;margin:0 auto;padding:16px;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:clip;outline:none;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;display:grid;grid-template-rows:auto 1fr auto;min-height:200px;isolation:isolate}
+    .card:where(:hover,:focus-within){transform:translateY(3px);border-color:color-mix(in oklab,var(--accent) 30%,var(--border));box-shadow:0 18px 50px rgba(2,6,23,.12)}
+    .card-header{display:flex;align-items:center;gap:12px;padding:14px}
+    .card-thumb{width:56px;height:56px;border-radius:12px;object-fit:cover;flex:0 0 auto;box-shadow:inset 0 0 0 1px var(--border)}
+    .card-title{font-weight:700;font-size:var(--fs-lg)}
+    .card-sub{color:var(--muted);font-size:var(--fs-sm)}
+    .card-body{padding:0 14px 6px;display:grid;gap:8px}
+    .kv{display:grid;gap:6px;font-size:var(--fs-sm)}
+    .kv b{font-weight:600;color:var(--muted)}
+    .kpi{display:grid;gap:8px}
+    .badge{display:inline-flex;align-items:center;gap:6px;background:color-mix(in oklab,var(--accent) 20%,transparent);color:var(--text);border:1px solid color-mix(in oklab,var(--accent) 40%,var(--border));padding:6px 8px;border-radius:999px;font-size:.8rem;font-weight:700;width:max-content}
+    .progress{height:8px;background:color-mix(in oklab,var(--surface) 70%,var(--bg));border-radius:999px;border:1px solid var(--border);overflow:hidden}
+    .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#34d399 60%,#86efac);transition:width .4s ease}
+    .spark{width:100%;height:36px}
+
+    .card-footer{display:flex;align-items:center;justify-content:space-between;padding:6px 14px 14px}
+    .price{font-weight:800;letter-spacing:.2px}
     .btn{appearance:none;border:1px solid var(--border);background:var(--text);color:#fff;font-weight:700;font-size:.85rem;border-radius:12px;padding:10px 12px;cursor:pointer;transition:transform .15s ease,background-color .2s ease,color .2s ease,border-color .2s ease}
     .btn:hover{background:var(--accent);color:var(--accent-ink);border-color:transparent;transform:translateY(1px)}
+
     .overlay{position:fixed;inset:0;display:none;place-items:center;background:color-mix(in oklab,black 35%,transparent);backdrop-filter:blur(3px);z-index:50;padding:16px}
     .overlay.active{display:grid}
     .form{width:min(560px,92vw);background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:18px;display:grid;gap:12px;position:relative}
-    .form h2{margin:0 0 4px;font-size:1.05rem}.form .close{position:absolute;top:10px;right:10px;border:none;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;line-height:1}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:560px){.row{grid-template-columns:1fr}}
-    .field{display:grid;gap:6px}.label{font-size:.85rem;color:var(--muted)}.input{width:100%;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:10px;padding:10px 12px;font-size:1rem;outline:none}
-    .input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in oklab,var(--accent) 25%,transparent)}.input[readonly]{background:color-mix(in oklab,var(--surface) 70%,var(--bg));color:var(--muted)}
-    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}.btn-secondary{background:transparent;color:var(--text);border-color:var(--border)}.btn-secondary:hover{background:color-mix(in oklab,var(--accent) 12%,transparent);color:var(--text)}
+    .form h2{margin:0 0 4px;font-size:1.05rem}
+    .form .close{position:absolute;top:10px;right:10px;border:none;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;line-height:1}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:560px){.row{grid-template-columns:1fr}}
+    .field{display:grid;gap:6px}
+    .label{font-size:.85rem;color:var(--muted)}
+    .input{width:100%;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:10px;padding:10px 12px;font-size:1rem;outline:none}
+    .input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in oklab,var(--accent) 25%,transparent)}
+    .input[readonly]{background:color-mix(in oklab,var(--surface) 70%,var(--bg));color:var(--muted)}
+    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+    .btn-secondary{background:transparent;color:var(--text);border-color:var(--border)}
+    .btn-secondary:hover{background:color-mix(in oklab,var(--accent) 12%,transparent);color:var(--text)}
+
     .toast{position:fixed;bottom:18px;left:50%;translate:-50% 0;background:var(--text);color:#fff;border-radius:12px;padding:10px 14px;font-size:.9rem;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .25s ease,translate .25s ease;z-index:60}
     .toast.show{opacity:1;translate:-50% -6px}
+
+    /* Materiais */
+    .materials{max-width:1200px;margin:10px auto 40px;padding:0 16px}
+    .materials h3{margin:10px 0 6px}
+    .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+    .res-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);display:grid;gap:8px}
+    .res-card .tag{font-size:.75rem;color:var(--muted)}
+    .res-card a{color:var(--text);font-weight:700;text-decoration:none}
+    .res-card a:hover{color:var(--accent)}
+
     @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-  </style>
+    /* Tabs/Subcabeçalho */
+    .tabs{position:sticky;top:0;z-index:30;display:flex;gap:8px;flex-wrap:nowrap;justify-content:center;padding:8px 16px 12px;margin:0;background:linear-gradient(var(--bg),color-mix(in oklab,var(--bg) 78%,transparent));backdrop-filter:blur(4px);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+    .tab{appearance:none;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:10px 16px;font-size:1.1rem;font-weight:800;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .15s ease}
+    .tab:hover{background:color-mix(in oklab,var(--accent) 12%,var(--surface));transform:translateY(1px)}
+    .tab.active{background:var(--text);color:#fff;border-color:var(--text)}
+</style>
 </head>
 <body>
   <header>
-    <h1>Unidade de Bandeirantes-290</h1>
-    <p class="subtitle">Cards modernos + formulários acessíveis e integração Supabase</p>
+    <div class="brand">
+      <h1>Unidade de Bandeirantes-290</h1>
+      <p class="subtitle">Operação • Estoques • Pessoas • Armazenagem</p>
+    </div>
+    <div class="header-actions">
+      <button id="themeToggle" class="icon-btn" title="Alternar tema">🌗 Tema</button>
+      <button id="refreshBtn" class="icon-btn" title="Atualizar">⟳ Atualizar</button>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Seções do painel">
+      <button class="tab active" data-cat="operacao">📊 Operação</button>
+      <button class="tab" data-cat="estoques">🌾 Estoques</button>
+      <button class="tab" data-cat="pessoas">👥 Pessoas</button>
+      <button class="tab" data-cat="armazenagem">🏭 Armazenagem</button>
+    </nav>
   </header>
-
   <main class="main" id="cards">
-    <article class="card" data-key="soja">
+    <!-- SOJA -->
+    <article class="card" data-key="soja" data-cat="estoques">
       <div class="card-header">
         <img class="card-thumb" alt="Soja" src="https://images.unsplash.com/photo-1528821154947-1aa3d1b749f9?q=80&w=320&auto=format&fit=crop"/>
         <div><div class="card-title">Soja</div><div class="card-sub">Estoque, meta, recebimento</div></div>
       </div>
-      <div class="card-body"><div class="kv" id="detalhes-soja"><div><b>Estoque:</b> <span data-f="estoque">--</span></div><div><b>Meta:</b> <span data-f="meta">--</span></div><div><b>Recebimento:</b> <span data-f="recebimento">--</span></div><div><b>Meta %:</b> <span data-f="percentual">--</span></div></div></div>
+      <div class="card-body">
+        <div class="kv" id="detalhes-soja">
+          <div><b>Estoque:</b> <span data-f="estoque">--</span></div>
+          <div><b>Meta:</b> <span data-f="meta">--</span></div>
+          <div><b>Recebimento:</b> <span data-f="recebimento">--</span></div>
+        </div>
+        <div class="kpi">
+          <span class="badge">Meta: <strong><span data-f="percentual">--</span>%</strong></span>
+          <div class="progress"><i data-prog="soja"></i></div>
+          <svg class="spark" data-spark="soja" viewBox="0 0 120 36" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
       <div class="card-footer"><div class="price" id="preco-soja">R$: --</div><button class="btn" data-open="soja">Editar</button></div>
     </article>
 
-    <article class="card" data-key="milho">
+    <!-- MILHO -->
+    <article class="card" data-key="milho" data-cat="estoques">
       <div class="card-header">
         <img class="card-thumb" alt="Milho" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=320&auto=format&fit=crop"/>
         <div><div class="card-title">Milho</div><div class="card-sub">Estoque, meta, recebimento</div></div>
       </div>
-      <div class="card-body"><div class="kv" id="detalhes-milho"><div><b>Estoque:</b> <span data-f="estoque">--</span></div><div><b>Meta:</b> <span data-f="meta">--</span></div><div><b>Recebimento:</b> <span data-f="recebimento">--</span></div><div><b>Meta %:</b> <span data-f="percentual">--</span></div></div></div>
+      <div class="card-body">
+        <div class="kv" id="detalhes-milho">
+          <div><b>Estoque:</b> <span data-f="estoque">--</span></div>
+          <div><b>Meta:</b> <span data-f="meta">--</span></div>
+          <div><b>Recebimento:</b> <span data-f="recebimento">--</span></div>
+        </div>
+        <div class="kpi">
+          <span class="badge">Meta: <strong><span data-f="percentual">--</span>%</strong></span>
+          <div class="progress"><i data-prog="milho"></i></div>
+          <svg class="spark" data-spark="milho" viewBox="0 0 120 36" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
       <div class="card-footer"><div class="price" id="preco-milho">R$: --</div><button class="btn" data-open="milho">Editar</button></div>
     </article>
 
-    <article class="card" data-key="trigo">
+    <!-- TRIGO -->
+    <article class="card" data-key="trigo" data-cat="estoques">
       <div class="card-header">
         <img class="card-thumb" alt="Trigo" src="https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=320&auto=format&fit=crop"/>
         <div><div class="card-title">Trigo</div><div class="card-sub">Estoque, meta, recebimento</div></div>
       </div>
-      <div class="card-body"><div class="kv" id="detalhes-trigo"><div><b>Estoque:</b> <span data-f="estoque">--</span></div><div><b>Meta:</b> <span data-f="meta">--</span></div><div><b>Recebimento:</b> <span data-f="recebimento">--</span></div><div><b>Meta %:</b> <span data-f="percentual">--</span></div></div></div>
+      <div class="card-body">
+        <div class="kv" id="detalhes-trigo">
+          <div><b>Estoque:</b> <span data-f="estoque">--</span></div>
+          <div><b>Meta:</b> <span data-f="meta">--</span></div>
+          <div><b>Recebimento:</b> <span data-f="recebimento">--</span></div>
+        </div>
+        <div class="kpi">
+          <span class="badge">Meta: <strong><span data-f="percentual">--</span>%</strong></span>
+          <div class="progress"><i data-prog="trigo"></i></div>
+          <svg class="spark" data-spark="trigo" viewBox="0 0 120 36" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
       <div class="card-footer"><div class="price" id="preco-trigo">R$: --</div><button class="btn" data-open="trigo">Editar</button></div>
     </article>
 
-    <article class="card" data-key="lenha">
+    <!-- LENHA -->
+    <article class="card" data-key="lenha" data-cat="estoques">
       <div class="card-header">
         <img class="card-thumb" alt="Lenha" src="https://images.unsplash.com/photo-1508193638397-1c4234db14d8?q=80&w=320&auto=format&fit=crop"/>
         <div><div class="card-title">Lenha</div><div class="card-sub">Estoque, meta, recebimento</div></div>
       </div>
-      <div class="card-body"><div class="kv" id="detalhes-lenha"><div><b>Estoque:</b> <span data-f="estoque">--</span></div><div><b>Meta:</b> <span data-f="meta">--</span></div><div><b>Recebimento:</b> <span data-f="recebimento">--</span></div><div><b>Meta %:</b> <span data-f="percentual">--</span></div></div></div>
+      <div class="card-body">
+        <div class="kv" id="detalhes-lenha">
+          <div><b>Estoque:</b> <span data-f="estoque">--</span></div>
+          <div><b>Meta:</b> <span data-f="meta">--</span></div>
+          <div><b>Recebimento:</b> <span data-f="recebimento">--</span></div>
+        </div>
+        <div class="kpi">
+          <span class="badge">Meta: <strong><span data-f="percentual">--</span>%</strong></span>
+          <div class="progress"><i data-prog="lenha"></i></div>
+          <svg class="spark" data-spark="lenha" viewBox="0 0 120 36" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
       <div class="card-footer"><div class="price" id="preco-lenha">R$: --</div><button class="btn" data-open="lenha">Editar</button></div>
     </article>
 
-    <article class="card" data-key="armazenamento">
+    <!-- ARMAZENAMENTO -->
+    <article class="card" data-key="armazenamento" data-cat="armazenagem">
       <div class="card-header">
         <img class="card-thumb" alt="Silo" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=320&auto=format&fit=crop"/>
         <div><div class="card-title">Armazenamento</div><div class="card-sub">Capacidade, utilizado, disponível</div></div>
       </div>
-      <div class="card-body"><div class="kv" id="detalhes-armazenamento"><div><b>Capacidade:</b> <span data-f="capacidade">--</span></div><div><b>Utilizado:</b> <span data-f="utilizado">--</span></div><div><b>Disponível:</b> <span data-f="disponivel">--</span></div></div></div>
+      <div class="card-body">
+        <div class="kv" id="detalhes-armazenamento">
+          <div><b>Capacidade:</b> <span data-f="capacidade">--</span></div>
+          <div><b>Utilizado:</b> <span data-f="utilizado">--</span></div>
+          <div><b>Disponível:</b> <span data-f="disponivel">--</span></div>
+        </div>
+        <div class="kpi">
+          <span class="badge">Ocupação</span>
+          <div class="progress"><i data-prog="armazenamento"></i></div>
+        </div>
+      </div>
       <div class="card-footer"><div class="price" id="preco-armazenamento">R$: --</div><button class="btn" data-open="armazenamento">Editar</button></div>
     </article>
 
-    <article class="card" data-key="pessoa">
+    <!-- PESSOA -->
+    <article class="card" data-key="pessoa" data-cat="pessoas">
       <div class="card-header">
         <img class="card-thumb" alt="Equipe" src="https://images.unsplash.com/photo-1551836022-4c4c79ecde51?q=80&w=320&auto=format&fit=crop"/>
-        <div><div class="card-title">Pessoa</div><div class="card-sub">Funcionários, ativos e inativos</div></div>
+        <div><div class="card-title">Pessoas</div><div class="card-sub">Funcionários, ativos e inativos</div></div>
       </div>
-      <div class="card-body"><div class="kv" id="detalhes-pessoa"><div><b>Total:</b> <span data-f="total">--</span></div><div><b>Ativos:</b> <span data-f="ativos">--</span></div><div><b>Inativos:</b> <span data-f="inativos">--</span></div></div></div>
+      <div class="card-body">
+        <div class="kv" id="detalhes-pessoa">
+          <div><b>Total:</b> <span data-f="total">--</span></div>
+          <div><b>Ativos:</b> <span data-f="ativos">--</span></div>
+          <div><b>Inativos:</b> <span data-f="inativos">--</span></div>
+        </div>
+        <div class="kpi">
+          <span class="badge">Ativação</span>
+          <div class="progress"><i data-prog="pessoa"></i></div>
+        </div>
+      </div>
       <div class="card-footer"><div class="price" id="preco-pessoa">R$: --</div><button class="btn" data-open="pessoa">Editar</button></div>
     </article>
 
-    <article class="card" data-key="geral">
+    <!-- GERAL -->
+    <article class="card" data-key="geral" data-cat="estoques">
       <div class="card-header">
         <img class="card-thumb" alt="Estoque geral" src="https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?q=80&w=320&auto=format&fit=crop"/>
         <div><div class="card-title">Estoque Geral</div><div class="card-sub">Total, entrada, saída e saldo</div></div>
       </div>
-      <div class="card-body"><div class="kv" id="detalhes-geral"><div><b>Total:</b> <span data-f="estoque_total">--</span></div><div><b>Entrada:</b> <span data-f="entrada">--</span></div><div><b>Saída:</b> <span data-f="saida">--</span></div><div><b>Saldo:</b> <span data-f="saldo">--</span></div></div></div>
+      <div class="card-body">
+        <div class="kv" id="detalhes-geral">
+          <div><b>Total:</b> <span data-f="estoque_total">--</span></div>
+          <div><b>Entrada:</b> <span data-f="entrada">--</span></div>
+          <div><b>Saída:</b> <span data-f="saida">--</span></div>
+          <div><b>Saldo:</b> <span data-f="saldo">--</span></div>
+        </div>
+      </div>
       <div class="card-footer"><div class="price" id="preco-geral">R$: --</div><button class="btn" data-open="geral">Editar</button></div>
     </article>
   </main>
+
+  <!-- Materiais sobre Agronegócio -->
+  <section class="materials">
+    <h3>Materiais sobre Agronegócio</h3>
+    <div class="grid" id="materialsGrid"></div>
+  </section>
 
   <div class="overlay" id="overlay" aria-hidden="true" role="dialog" aria-modal="true">
     <form class="form" id="form" novalidate>
@@ -124,7 +264,11 @@
   <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-  // Sua URL e ANON KEY
+  // ====== Funções utilitárias definidas cedo (evita referências antes da definição) ======
+  function showToast(msg){ const toast=document.getElementById('toast'); toast.textContent=msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1800); }
+  function normalizeNumber(v){ if(v===''||v==null) return null; const n=Number(v.toString().replace(',','.')); return isFinite(n)?n:v; }
+
+  // ====== Supabase: cliente ======
   const SUPABASE_URL = 'https://dylziaqkyavkfwjepqkp.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5bHppYXFreWF2a2Z3amVwcWtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NTc1OTgsImV4cCI6MjA2ODAzMzU5OH0.gy5jXxKOTgeCf0Rwq7ktLTz1pyoZ8dJjZOK9UB9rHCM';
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -133,7 +277,7 @@
   const dbConfig = {
     soja: { table: 'soja', orderBy: 'created_at',
       map: { estoque:'estoque', meta:'meta', recebimento:'recebimento', percentual:'percentual' } },
-    // ⚠ milho: colunas reais minúsculas (Postgres normaliza se não usar aspas)
+    // milho: colunas reais minúsculas
     milho: { table: 'milho', orderBy: 'timestamp',
       map: { estoque:'estoqueatual', meta:'meta', recebimento:'recebimento', percentual:'pencentual_metal' } },
     trigo: { table: 'trigo', orderBy: 'created_at',
@@ -192,8 +336,17 @@
     ]}
   };
 
+  // Materiais (links estáticos – edite à vontade)
+  const materials = [
+    { title:'CONAB – Acompanhamento da Safra', url:'https://www.conab.gov.br/', tag:'Safras', desc:'Boletins, estimativas e preços.' },
+    { title:'EMBRAPA – Tecnologias e Sistemas de Produção', url:'https://www.embrapa.br/', tag:'Tecnologia', desc:'Boas práticas, cultivares e manejo.' },
+    { title:'MAPA – Ministério da Agricultura', url:'https://www.gov.br/agricultura/pt-br', tag:'Políticas', desc:'Regulações, programas e notícias.' },
+    { title:'Cepea/Esalq – Indicadores de Preços', url:'https://www.cepea.esalq.usp.br/', tag:'Mercado', desc:'Indicadores de soja, milho, boi, etc.' },
+    { title:'Canal do Produtor – CNA', url:'https://www.cnabrasil.org.br/', tag:'CNA', desc:'Conteúdo e serviços para produtores.' }
+  ];
+
   // Estado local
-  const state = { soja:{}, milho:{}, trigo:{}, lenha:{}, armazenamento:{}, pessoa:{}, geral:{} };
+  const state = { soja:{}, milho:{}, trigo:{}, lenha:{}, armazenamento:{}, pessoa:{}, geral:{}, _series:{} };
 
   // ===== utilitários para mapear dados UI <-> DB =====
   const invert = (obj)=>Object.fromEntries(Object.entries(obj).map(([a,b])=>[b,a]));
@@ -216,9 +369,32 @@
   const fieldsBox = form.querySelector('.fields');
   const formTitle = document.getElementById('form-title');
   const contextInput = document.getElementById('context');
-  const toast = document.getElementById('toast');
+  const themeToggle = document.getElementById('themeToggle');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const tabs = document.getElementById('tabs');
+
+  function setTab(cat){
+    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.cat===cat));
+    localStorage.setItem('tab',cat);
+    document.querySelectorAll('main .card').forEach(card=>{
+      const c = card.dataset.cat || 'operacao';
+      const show = cat==='operacao' ? true : (c===cat);
+      card.style.display = show ? 'grid' : 'none';
+    });
+  }
+  tabs.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.tab');
+    if(!btn) return;
+    setTab(btn.dataset.cat);
+  });
+  setTab(localStorage.getItem('tab') || 'operacao');
 
   document.querySelectorAll('[data-open]').forEach(btn=>btn.addEventListener('click',()=>openForm(btn.dataset.open)));
+  themeToggle.addEventListener('click',()=>{
+    const dark = document.body.getAttribute('data-theme')==='dark';
+    document.body.setAttribute('data-theme', dark ? '' : 'dark');
+  });
+  refreshBtn.addEventListener('click',()=>{ loadAll(true); });
 
   function openForm(key){
     const schema = schemas[key]; if(!schema) return;
@@ -270,19 +446,32 @@
     showToast('Salvo com sucesso.');
   });
 
-  function normalizeNumber(v){ if(v===''||v==null) return null; const n=Number(v.toString().replace(',','.')); return isFinite(n)?n:v; }
+  // ===== fetch (último + série curta para sparkline) =====
+  function primaryDbColumnForSeries(key){
+    const map = dbConfig[key]?.map || {}; // usamos estoque quando existir
+    if(map.estoque) return map.estoque;
+    if(key==='armazenamento') return map.utilizado;
+    if(key==='pessoa') return map.ativos;
+    return null;
+  }
 
-  // ===== fetch último registro (ordenação com fallback) =====
   async function fetchLatest(key){
     const { table, orderBy } = dbConfig[key];
-    const orderCandidates = [...new Set([orderBy,'created_at','timestamp'])];
-    for(const col of orderCandidates){
-      const { data, error } = await supabase.from(table).select('*').order(col,{ascending:false}).limit(1);
-      if(!error){ if(data && data[0]){ state[key]=fromDb(key, data[0]); updateCard(key); } return; }
+    const { data, error } = await supabase.from(table).select('*').order(orderBy,{ascending:false}).limit(1);
+    if(!error && data && data[0]){ state[key]=fromDb(key, data[0]); updateCard(key); }
+
+    // série para sparkline (até 12 pontos)
+    const col = primaryDbColumnForSeries(key);
+    if(!col) return;
+    const { data:series, error:sErr } = await supabase.from(table)
+      .select(`${col}`).order(orderBy,{ascending:false}).limit(12);
+    if(!sErr && series){
+      const arr = series.map(r=>Number(r[col])).filter(n=>isFinite(n)).reverse();
+      state._series[key]=arr; drawSpark(key, arr);
     }
-    console.warn('fetchLatest falhou para', key);
   }
-  async function loadAll(){ await Promise.all(Object.keys(dbConfig).map(fetchLatest)); }
+
+  async function loadAll(){ await Promise.all(Object.keys(dbConfig).map(k=>fetchLatest(k))); }
 
   // ===== realtime (INSERT) =====
   Object.entries(dbConfig).forEach(([key,{table}])=>{
@@ -296,25 +485,76 @@
 
   function updateCard(key){
     const card = document.querySelector(`.card[data-key="${key}"]`); if(!card) return;
-    const data = state[key];
+    const data = state[key] || {};
     card.querySelectorAll('[data-f]').forEach(span=>{
       const k=span.getAttribute('data-f');
       let val=data?.[k];
       if(typeof val==='number') val=new Intl.NumberFormat('pt-BR').format(val);
       span.textContent=(val??'--');
     });
+
+    // progressos
+    const i = card.querySelector(`[data-prog="${key}"]`);
+    if(i){
+      let pct = 0;
+      if(['soja','milho','trigo','lenha'].includes(key)){
+        const e = Number(data?.estoque); const m = Number(data?.meta);
+        pct = isFinite(e)&&isFinite(m)&&m>0 ? Math.max(0, Math.min(100, (e/m)*100)) : 0;
+      }
+      if(key==='armazenamento'){
+        const u = Number(data?.utilizado); const c = Number(data?.capacidade);
+        pct = isFinite(u)&&isFinite(c)&&c>0 ? Math.max(0, Math.min(100, (u/c)*100)) : 0;
+      }
+      if(key==='pessoa'){
+        const a = Number(data?.ativos); const t = Number(data?.total);
+        pct = isFinite(a)&&isFinite(t)&&t>0 ? Math.max(0, Math.min(100, (a/t)*100)) : 0;
+      }
+      i.style.width = pct + '%';
+      const pctSpan = card.querySelector('[data-f="percentual"]');
+      if(pctSpan && !pctSpan.textContent.trim()) pctSpan.textContent = pct.toFixed(1);
+    }
+
+    // preço (pega primeiro número como destaque)
     const price = card.querySelector('.price');
     if(price){
       const numbers = Object.values(data||{}).map(v=>Number(v)).filter(v=>isFinite(v));
       price.textContent = numbers.length?`R$: ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(numbers[0])}`:'R$: --';
     }
+
+    // spark se já houver série carregada
+    if(state._series[key]) drawSpark(key, state._series[key]);
   }
 
-  function showToast(msg){ toast.textContent=msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1800); }
+  // Desenha sparkline simples
+  function drawSpark(key, arr){
+    const svg = document.querySelector(`[data-spark="${key}"]`); if(!svg) return;
+    const w=120, h=36; if(!arr || arr.length<2){ svg.innerHTML=''; return; }
+    const min=Math.min(...arr), max=Math.max(...arr); const pad=3;
+    const scaleX = (i)=> (i/(arr.length-1))*(w-2*pad)+pad;
+    const scaleY = (v)=> h-pad - (max===min?0:( (v-min)/(max-min) )*(h-2*pad));
+    const d = arr.map((v,i)=> (i?'L':'M')+scaleX(i)+','+scaleY(v)).join(' ');
+    svg.innerHTML = `<path d="${d}" fill="none" stroke="currentColor" stroke-width="2" opacity="0.85"/>
+                     <circle cx="${scaleX(arr.length-1)}" cy="${scaleY(arr[arr.length-1])}" r="2.5" fill="currentColor"/>`;
+  }
 
+  // Render materiais
+  const grid = document.getElementById('materialsGrid');
+  grid.innerHTML = materials.map(m=>`<article class="res-card"><span class="tag">${m.tag}</span><a href="${m.url}" target="_blank" rel="noopener">${m.title}</a><p class="subtitle">${m.desc}</p></article>`).join('');
+  // ====== Smoke tests (não afetam UI) ======
+  (function(){
+    console.group('Smoke tests');
+    console.assert(typeof loadAll === 'function','loadAll deveria estar definida');
+    // teste de mapeamento milho
+    const uiRow = { estoque: 10, meta: 20, recebimento: 5, percentual: 50 };
+    const dbRow = toDb('milho', uiRow);
+    console.assert('estoqueatual' in dbRow, 'Mapeamento milho.estoque -> estoqueatual');
+    const back = fromDb('milho', dbRow);
+    console.assert(back.estoque === 10, 'fromDb milho deve retornar estoque');
+    console.groupEnd();
+  })();
+  // Primeira carga
   loadAll();
 </script>
 
 </body>
 </html>
-
