@@ -15,14 +15,199 @@
     html,body{height:100%}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",Helvetica,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
-    /* Header */
-    header{position:relative;display:grid;gap:12px;justify-items:center;text-align:center;padding:26px 16px}
-    .brand{display:grid;justify-items:center}
-    h1{margin:0;font-size:var(--fs-h1);font-weight:900}
-    .subtitle{color:var(--muted);font-size:1.15rem;font-weight:800;margin-top:6px}
-    .header-actions{position:absolute;top:14px;right:16px;display:flex;gap:10px}
-    .icon-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow)}
-    .icon-btn:hover{background:color-mix(in oklab,var(--accent) 14%,var(--surface))}
+    /* ===== base (opcional, caso não tenha) ===== */
+:root{
+  --fs-h1: clamp(1.6rem, 1.1rem + 2.2vw, 2.6rem);
+  --surface: oklch(22% 0.02 264);
+  --surface-elev: oklch(26% 0.02 264);
+  --text: oklch(94% 0.02 264);
+  --muted: oklch(75% 0.02 264);
+  --accent: oklch(70% 0.16 210);
+  --border: color-mix(in oklab, var(--text) 14%, transparent);
+  --shadow: 0 6px 24px rgba(0,0,0,.25), 0 1px 0 rgba(255,255,255,.04) inset;
+  --radius-xl: 18px;
+  --ring: 0 0 0 3px color-mix(in oklab, var(--accent) 35%, transparent);
+}
+
+@media (prefers-color-scheme: light){
+  :root{
+    --surface: oklch(98% 0.01 264);
+    --surface-elev: oklch(100% 0 0);
+    --text: oklch(22% 0.02 264);
+    --muted: oklch(48% 0.02 264);
+    --border: color-mix(in oklab, var(--text) 12%, transparent);
+    --shadow: 0 8px 24px rgba(0,0,0,.08);
+  }
+}
+
+/* ===== Header ===== */
+header{
+  position: relative;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  text-align: center;
+  padding: clamp(20px, 3vw, 32px) 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(1200px 50% at 50% -10%,
+      color-mix(in oklab, var(--accent) 16%, transparent),
+      transparent 60%)
+    ,linear-gradient(180deg, color-mix(in oklab, var(--surface) 95%, transparent), var(--surface-elev));
+  box-shadow: var(--shadow);
+  overflow: clip;
+  isolation: isolate;
+  backdrop-filter: blur(6px);
+}
+
+.brand{
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
+h1{
+  margin: 0;
+  font-size: var(--fs-h1);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.subtitle{
+  color: var(--muted);
+  font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.15rem);
+  font-weight: 700;
+  margin: 4px 0 0;
+}
+
+/* ===== Ações no topo ===== */
+.header-actions{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 2;
+}
+
+@media (max-width: 560px){
+  .header-actions{
+    position: static;
+    order: -1;
+    justify-content: center;
+  }
+}
+
+/* ===== Botão icônico ===== */
+.icon-btn{
+  --pad-x: 12px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg,
+      color-mix(in oklab, var(--surface-elev) 85%, transparent),
+      color-mix(in oklab, var(--surface) 100%, transparent));
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px var(--pad-x);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow);
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    opacity .18s ease;
+  will-change: transform;
+  backdrop-filter: blur(4px);
+}
+
+/* estado hover/active/focus */
+.icon-btn:hover{
+  background: color-mix(in oklab, var(--accent) 12%, var(--surface));
+  transform: translateY(-1px);
+}
+
+.icon-btn:active{
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0,0,0,.2) inset;
+}
+
+.icon-btn:focus-visible{
+  outline: none;
+  box-shadow: var(--shadow), var(--ring);
+}
+
+/* variante “ghost” + “primary” (opcionais) */
+.icon-btn.ghost{
+  background: transparent;
+  border-color: color-mix(in oklab, var(--accent) 30%, transparent);
+}
+.icon-btn.primary{
+  background: color-mix(in oklab, var(--accent) 24%, var(--surface));
+  border-color: color-mix(in oklab, var(--accent) 38%, transparent);
+}
+
+/* tamanho compacto só ícone */
+.icon-btn.icon-only{
+  --pad-x: 10px;
+  padding: 8px;
+  aspect-ratio: 1/1;
+  justify-content: center;
+}
+
+/* badge/indicador (ex.: notificação) */
+.icon-btn.badge::after{
+  content: "";
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--accent) 70%, red 10%);
+  box-shadow: 0 0 0 2px var(--surface);
+}
+
+/* tooltip simples com data-attribute */
+.icon-btn[data-tooltip]{
+  position: relative;
+}
+.icon-btn[data-tooltip]::before{
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  translate: -50% 8px;
+  padding: 6px 10px;
+  font-size: .825rem;
+  color: var(--text);
+  background: color-mix(in oklab, var(--surface) 80%, black 10%);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, translate .18s ease;
+  box-shadow: var(--shadow);
+}
+.icon-btn:hover::before{
+  opacity: 1;
+  translate: -50% 0;
+}
+
+/* animação de entrada leve no header */
+@media (prefers-reduced-motion: no-preference){
+  header{
+    animation: fadeSlide .36s ease both;
+  }
+  @keyframes fadeSlide{
+    from{ opacity: 0; transform: translateY(-6px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+
 
     /* Tabs */
     .tabs{position:sticky;top:0;z-index:30;display:flex;gap:8px;flex-wrap:nowrap;justify-content:center;padding:8px 16px 12px;margin:0;background:linear-gradient(var(--bg),color-mix(in oklab,var(--bg) 78%,transparent));backdrop-filter:blur(4px);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
@@ -114,22 +299,27 @@
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <h1>Unidade de Bandeirantes-290</h1>
-      <p class="subtitle">Operação • Estoques • Pessoas • Armazenagem</p>
-    </div>
-    <div class="header-actions">
-      <button id="themeToggle" class="icon-btn" title="Alternar tema">🌗 Tema</button>
-      <button id="refreshBtn" class="icon-btn" title="Atualizar">⟳ Atualizar</button>
-    </div>
-    <nav class="tabs" id="tabs" aria-label="Seções do painel">
-      <button class="tab active" data-cat="operacao">📊 Operação</button>
-      <button class="tab" data-cat="estoques">🌾 Estoques</button>
-      <button class="tab" data-cat="pessoas">👥 Pessoas</button>
-      <button class="tab" data-cat="armazenagem">🏭 Armazenagem</button>
-    </nav>
-  </header>
+  <!-- HEADER MODERNO -->
+<header class="app-header" data-theme="auto">
+  <div class="brand">
+    <h1>Unidade de Bandeirantes-290</h1>
+    <p class="subtitle">Operação • Estoques • Pessoas • Armazenagem</p>
+  </div>
+
+  <div class="header-actions">
+    <button id="themeToggle" class="icon-btn" title="Alternar tema" aria-pressed="false">🌗 Tema</button>
+    <button id="refreshBtn" class="icon-btn" title="Atualizar">⟳ Atualizar</button>
+  </div>
+
+  <nav class="tabs" id="tabs" aria-label="Seções do painel" role="tablist">
+    <button class="tab active" data-cat="operacao" role="tab" aria-selected="true">📊 Operação</button>
+    <button class="tab" data-cat="estoques" role="tab" aria-selected="false">🌾 Estoques</button>
+    <button class="tab" data-cat="pessoas" role="tab" aria-selected="false">👥 Pessoas</button>
+    <button class="tab" data-cat="armazenagem" role="tab" aria-selected="false">🏭 Armazenagem</button>
+    <span class="tab-indicator" aria-hidden="true"></span>
+  </nav>
+</header>
+
 
   <!-- KPIs (apenas na aba Operação) -->
   <section class="kpis" id="kpis">
@@ -347,12 +537,12 @@
       percentual:  'percentual_metal'   // <- igual ao DB
     }
   },
-   
+
     // milho TABELAS CONFORME BANCO DE DADOS
     milho: { table: 'milho', orderBy: 'timestamp',
       map: { estoque:'estoqueatual', meta:'meta', recebimento:'recebimento', percentual:'percentual_metal' } },
-    
-    // TRIGO: TABELAS CONFORME BANCO DE DADOS 
+
+    // TRIGO: TABELAS CONFORME BANCO DE DADOS
     trigo: { table:'trigo', orderBy:'id',
     map:{ estoque:'estoque', meta:'meta', recebimento:'recebimento', percentual:'percentual' } },
 
@@ -360,14 +550,14 @@
     lenha: { table:'lenha', orderBy:'id',
     map:{ estoque:'compra_anual_lenha', meta:'media_compra_lenha', recebimento:'baixa_lenha', percentual:'estoque_atual_lenha' } },
 
-  // ARMAZENAMENTO, TABELAS CONFORME BANCO DE DADOS 
+  // ARMAZENAMENTO, TABELAS CONFORME BANCO DE DADOS
     armazenamento: { table: 'capacidade_estatica_unidade', orderBy: 'id',
       map: { capacidade:'capacidade_estatica', utilizado:'capacidade_real', disponivel:'estoque_atual' } },
-    
-    // PESSOAS TABELAS CONFORME BANCO DE DADOS   
+
+    // PESSOAS TABELAS CONFORME BANCO DE DADOS
     pessoa: { table: 'funcionario_employer', orderBy: 'id',
       map: { total:'quantidade_orcado', ativos:'quantidade_ativo', inativos:'quantidade_funcionario_employer' } },
-      
+
     geral: { table: 'geral', orderBy: 'created_at',
       map: { estoque_total:'estoque_total', entrada:'entrada', saida:'saida', saldo:'saldo' } },
   };
@@ -427,7 +617,7 @@
   const grid = $('#materialsGrid');
   grid.innerHTML = materials.map(m=>`<article class="res-card"><span class="tag">${m.tag}</span><a href="${m.url}" target="_blank" rel="noopener">${m.title}</a><span class="desc">${m.desc}</span></article>`).join('');
 
-    
+
   // ========= State & Mappers =========
   // STATE ELE GUARDA SEMPRE UM OBJETO E SEMPRE COMECA VAZIO...
   const state = { soja:{}, milho:{}, trigo:{}, lenha:{}, armazenamento:{}, pessoa:{}, geral:{}, _series:{} };
@@ -437,7 +627,7 @@
 
   // ELE TROCA O DADOS DA INTERFACE PARA O BANCO
   const toDb = (key, uiRow)=>{ const map=dbConfig[key].map||{}; const out={}; Object.entries(uiRow).forEach(([k,v])=>out[map[k]||k]=v); return out; };
-    
+
   //converte os dados do BANCO PARA INTERFACE
   const fromDb = (key, dbRow)=>{ const rev=invert(dbConfig[key].map||{}); const out={}; Object.entries(dbRow||{}).forEach(([k,v])=>out[rev[k]||k]=v); return out; };
   //
