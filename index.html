@@ -269,7 +269,7 @@
       </div>
       <div class="card-body">
         <div class="kv" id="detalhes-pessoa">
-          <div><b>Total:</b> <span data-f="total">--</span></div>
+          <div><b>Orçado:</b> <span data-f="total">--</span></div>
           <div><b>Ativos:</b> <span data-f="ativos">--</span></div>
           <div><b>Inativos:</b> <span data-f="inativos">--</span></div>
         </div>
@@ -362,8 +362,8 @@
     armazenamento: { table: 'capacidade_estatica_unidade', orderBy: 'id',
       map: { capacidade:'capacidade_estatica', utilizado:'capacidade_real', disponivel:'estoque_atual' } },
       
-    pessoa: { table: 'pessoa', orderBy: 'created_at',
-      map: { total:'total', ativos:'ativos', inativos:'inativos' } },
+    pessoa: { table: 'funcionario_employer', orderBy: 'id',
+      map: { total:'quantidade_orcado', ativos:'quantidade_ativo', inativos:'quantidade_funcionario_employer' } },
       
     geral: { table: 'geral', orderBy: 'created_at',
       map: { estoque_total:'estoque_total', entrada:'entrada', saida:'saida', saldo:'saldo' } },
