@@ -354,15 +354,17 @@
     trigo: { table:'trigo', orderBy:'id',
     map:{ estoque:'estoque', meta:'meta', recebimento:'recebimento', percentual:'percentual' } },
 
-  // ✅ recomendo usar 'id' aqui também (ajuste se sua tabela tiver 'timestamp' mesmo)
-  lenha: { table:'lenha', orderBy:'id',
+  // ✅ rcadastrao no nBANCO DE DAODOS E IMPORRTAÇÃP
+    lenha: { table:'lenha', orderBy:'id',
     map:{ estoque:'compra_anual_lenha', meta:'media_compra_lenha', recebimento:'baixa_lenha', percentual:'estoque_atual_lenha' } },
 
 
-    armazenamento: { table: 'armazenamento', orderBy: 'created_at',
-      map: { capacidade:'capacidade', utilizado:'utilizado', disponivel:'disponivel' } },
+    armazenamento: { table: 'capacidade_estatica_unidade', orderBy: 'id',
+      map: { capacidade:'capacidade_estatica', utilizado:'capacidade_real', disponivel:'estoque_atual' } },
+      
     pessoa: { table: 'pessoa', orderBy: 'created_at',
       map: { total:'total', ativos:'ativos', inativos:'inativos' } },
+      
     geral: { table: 'geral', orderBy: 'created_at',
       map: { estoque_total:'estoque_total', entrada:'entrada', saida:'saida', saldo:'saldo' } },
   };
